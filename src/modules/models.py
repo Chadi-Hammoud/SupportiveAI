@@ -2,18 +2,18 @@ from django.db import models
 from django.contrib.auth.models import User
 
 class Patient(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
     phone = models.CharField(max_length=20)
+    name = models.CharField(max_length=20)
     address = models.CharField(max_length=200)
+    email=models.CharField(max_length=200)
     GENDER_CHOICES = (
         ('M', 'Male'),
         ('F', 'Female'),
     )
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
     dob = models.DateField()
+    username = models.OneToOneField(User, on_delete=models.CASCADE)
 
-    def __str__(self):
-        return self.user.username
 
 class Therapist(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
