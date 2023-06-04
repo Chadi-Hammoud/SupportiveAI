@@ -10,7 +10,7 @@ from django.shortcuts import redirect, render
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
-from .serializers import PatientSerializer,LoginSerializer
+from .serializers import PatientSerializer,LoginSerializer,TherapistSerializer
 from .models import *
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
@@ -29,7 +29,7 @@ def home(request):
 
 #register user in database
 class RegisterView(APIView):
-
+    
     def get(self, request, format=None):
         print("!")
         return render(request, 'register.html')
@@ -48,21 +48,33 @@ class RegisterView(APIView):
         except User.DoesNotExist:
             user = User.objects.create_user(username=username,email=email, password=password)
             print(user)
-
-        serializer = PatientSerializer(data=request.data)
-        print(serializer)
+        if type == 'Patient':
+            serializer = PatientSerializer(data=request.data)
+            print(serializer)
        
-        if serializer.is_valid():
+            if serializer.is_valid():
             
-            user.is_active = False  # Set the user as inactive initially
-            user.save()
-            serializer.save(username=user)
-            send_verification_email(request, user)
-            print("verfication sent")
-            print(get_verification_link(request,user))
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+                user.is_active = False  # Set the user as inactive initially
+                user.save()
+                serializer.save(username=user)
+                send_verification_email(request, user)
+                print("verfication sent")
+                print(get_verification_link(request,user))
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            else:
+               return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            serializer = TherapistSerializer(data=request.data)
+            print(serializer)
+            if serializer.is_valid():
+                user.save()
+                serializer.save(username=user)
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            else:
+               return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 
 import io
 from django.core.mail import EmailMessage
@@ -107,8 +119,17 @@ class LoginView(APIView):
                     auth.login(request, user_authenticate)
                     return redirect('dash', user="P")
                 except Patient.DoesNotExist:
-                    print("patient does not exsist")
-                    return redirect('/')
+                    
+                    try:
+                        data = Therapist.objects.get(username=user)
+                        #print(data)
+                        print("not patt")
+
+                        print('therapist has been Logged')
+                        auth.login(request, user_authenticate)
+                        return redirect('dash', user="T")
+                    except Therapist.DoesNotExist:
+                        return redirect('/')
             else:
                 print('Login Failed')
                 return render(request, 'login.html')
@@ -122,9 +143,16 @@ def dash(request, user):
    
    
     print(user)
-    userid = User.objects.get(username=request.user)
-    data = Patient.objects.get(username=userid)
-    print(data.name)
+    if(user=='P'):
+       userid = User.objects.get(username=request.user)
+       data = Patient.objects.get(username=userid)
+       print(data.name)
+
+    else:
+        userid = User.objects.get(username=request.user)
+        data = Therapist.objects.get(username=userid)
+        print(data.name)
+
    
 
     return render(request, 'dash.html', {'user': user, 'data': data})

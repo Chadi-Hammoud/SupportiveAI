@@ -9,6 +9,12 @@ class PatientSerializer(serializers.ModelSerializer):
         model = Patient
         fields = ('id','name','phone','address','email','dob','gender')
 
+class TherapistSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Therapist
+        fields = ('id','name','phone','address','email','dob','gender')
+
 
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField()
