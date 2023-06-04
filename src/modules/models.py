@@ -111,3 +111,6 @@ class ChatHistory(models.Model):
 
     def __str__(self):
         return f"Chat History {self.IDchat}"
+
+    
+
