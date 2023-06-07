@@ -46,7 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'modules',
     'rest_framework',
-    "verify_email.apps.VerifyEmailConfig",
+    # "verify_email.apps.VerifyEmailConfig",
 
     
 ]
