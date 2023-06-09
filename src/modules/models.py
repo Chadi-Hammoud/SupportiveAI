@@ -29,6 +29,7 @@ class Therapist(models.Model):
     dob = models.DateField()
     specialization = models.CharField(max_length=100)
     qualification = models.CharField(max_length=200)
+    Therapist_link= models.CharField(max_length=200)
 
     def __str__(self):
         return self.username.username
