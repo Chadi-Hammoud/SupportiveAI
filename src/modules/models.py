@@ -16,13 +16,23 @@ class Patient(models.Model):
 
 
 class Therapist(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    username = models.OneToOneField(User, on_delete=models.CASCADE)
+    name= models.CharField(max_length=20)
     phone = models.CharField(max_length=20)
+    address = models.CharField(max_length=200)
+    email=models.CharField(max_length=200)
+    GENDER_CHOICES = (
+        ('M', 'Male'),
+        ('F', 'Female'),
+    )
+    gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
+    dob = models.DateField()
     specialization = models.CharField(max_length=100)
     qualification = models.CharField(max_length=200)
+    Therapist_link= models.CharField(max_length=200)
 
     def __str__(self):
-        return self.user.username
+        return self.username.username
 
 class TreatmentPlan(models.Model):
     ID = models.AutoField(primary_key=True)
