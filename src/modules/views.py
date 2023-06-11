@@ -119,7 +119,6 @@ from django.template.loader import render_to_string
 
 
 def send_verification_email(request, user):
-  
     mail_subject = 'Verify your email'
     message = get_verification_link(request, user)
     print(message)

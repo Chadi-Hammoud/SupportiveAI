@@ -1,16 +1,10 @@
-<<<<<<< Updated upstream
+
 # from .views import *
 
 from django.urls import path
 from . import views
-from modules.views import * 
+from modules.views import *
 
-=======
-
-from django.urls import path
-from . import views
-from .views import *
->>>>>>> Stashed changes
 
 urlpatterns = [
     path('', views.home, name='home'),
@@ -20,5 +14,4 @@ urlpatterns = [
     path('register/', RegisterView.as_view(), name='register'),
     path('dash/(?P<user>.*)/$', views.dash, name='dash'),
     path('verify/<uidb64>/<token>/', views.verify_email, name='verify_email'),
-
 ]
