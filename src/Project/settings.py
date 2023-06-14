@@ -47,6 +47,8 @@ INSTALLED_APPS = [
     'modules',
     'rest_framework',
     "verify_email.apps.VerifyEmailConfig",
+   
+
 
     
 ]
@@ -139,7 +141,7 @@ STATICFILES_DIRS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTHENTICATION_BACKENDS = [
-     #'django.contrib.auth.backends.ModelBackend',
+     'django.contrib.auth.backends.ModelBackend',
     
 
 ]

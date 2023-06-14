@@ -13,7 +13,9 @@ class Patient(models.Model):
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
     dob = models.DateField()
     username = models.OneToOneField(User, on_delete=models.CASCADE)
-    post=post=models.CharField(max_length=200,default='patient')
+    post=models.CharField(max_length=200,default='patient',null=True)
+    def __str__(self):
+        return self.username.username
 
 
 class Therapist(models.Model):
