@@ -13,6 +13,9 @@ class Patient(models.Model):
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
     dob = models.DateField()
     username = models.OneToOneField(User, on_delete=models.CASCADE)
+    post=models.CharField(max_length=200,default='patient',null=True)
+    def __str__(self):
+        return self.username.username
 
 
 class Therapist(models.Model):
@@ -30,6 +33,7 @@ class Therapist(models.Model):
     specialization = models.CharField(max_length=100)
     qualification = models.CharField(max_length=200)
     Therapist_link= models.CharField(max_length=200)
+    post=models.CharField(max_length=200,default='doctor')
 
     def __str__(self):
         return self.username.username
