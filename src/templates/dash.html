@@ -17,5 +17,16 @@
     <br>
     email={{data.email}}
 </p>
+<form method="POST" action="">
+    {% csrf_token %}
+<label for="doctor">Select doctor:</label>
+    <select id="doctor" name="doctor" required>
+{% for dr in doctors %}
+        <option value={{dr}}>{{dr}}</option> 
+{% endfor %}
+
+</select><br><br>
+<input type="submit" value="submit"/>
+</form>
 </body>
 </html>
