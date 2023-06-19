@@ -16,7 +16,17 @@ body{
 * {
   box-sizing: border-box;
 }
+a{
+    color: #990099;
+  font-size: 15px;
 
+  font-family: Garamond;
+  text-decoration: none;
+}
+a:hover {
+  color:#990099  ;
+ font-weight: bold;
+}
 
 .column {
 margin-top:50px;
@@ -48,8 +58,7 @@ font-family:Garamond;
 }
 
 button{
-margin-right:65px;
-float:right;
+  text-align: center;
  border-radius: 25px;
   background: white;
   width:110px;
@@ -61,7 +70,12 @@ font-family:Garamond;
   
 
 }
+button:hover {
+  color:#990099  ;
+  font-weight: bold;
 
+  background: #f4dafc;
+}
 
 .form{
   margin-top:60px;
@@ -80,9 +94,9 @@ font-family:Garamond;
     <label for="username">USERNAME:</label><br>
     <input type="text" id="username" name="username" required><br><br>
     <label for="password">PASSWORD:</label><br>
-    <input type="password" id="password" name="password" required><br><br>
+    <input type="password" id="password" name="password" required><br><br><br>
     <button type="submit" class="btn btn-primary">Submit</button><br>
-    <p>forget your password? <a href="/forget/">click here</a> </p>
+    <p> <a href="/forget/">Forget password?</a> </p>
 	</div>
   </form>
   </div>

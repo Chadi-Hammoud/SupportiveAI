@@ -4,6 +4,11 @@ from django.contrib.auth.tokens import default_token_generator
 import random
 import hashlib
 import io
+from datetime import datetime, timedelta
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework_simplejwt.tokens import RefreshToken
 from django.core.mail import EmailMessage
 from django.http import HttpResponse
 from django.template.loader import render_to_string
@@ -33,7 +38,6 @@ from django.utils.encoding import force_bytes
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
-from rest_framework_simplejwt.tokens import RefreshToken
 
 
 # Create your views here.
@@ -71,64 +75,13 @@ def mycalendlyregister(request,user):
     
     return render(request, 'mycalendlyregister.html', {"user": user})
 
+
+
 #register user in database
-# class RegisterView(APIView):
-    
-#     def get(self, request, format=None):
-        
-#         return render(request, 'register.html')
-
-#     def post(self, request, format=None):
-#         type = request.data.get('post')
-#         print(type)
-#         username = request.data.get('username')
-#         password = request.data.get('password')
-#         email=request.data.get('email')
-
-#         try:
-#             user = User.objects.get(username=username)
-#             print(user)
-#             print(username)
-#             return Response({'error': 'Username already exists.'}, status=status.HTTP_400_BAD_REQUEST)
-#         except User.DoesNotExist:
-#             user = User.objects.create_user(username=username,email=email, password=password)
-#             print(user)
-#         if type == 'patient':
-#             serializer = PatientSerializer(data=request.data)
-#             print(serializer)
-#             if serializer.is_valid():  
-#                 user.save()
-#                 user.is_active = False  # Set the user as inactive initially
-#                 serializer.save(username=user)
-                
-#                 send_verification_email(request, user)
-#                 print("verfication sent")
-#                 print(get_verification_link(request,user))
-#                 return Response(serializer.data, status=status.HTTP_201_CREATED)
-#             else:
-#                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-#         else:
-#             serializer = TherapistSerializer(data=request.data)
-#             print(serializer)
-#             if serializer.is_valid():
-                
-#                 print(user.password)
-#                 user.save()
-#                 serializer.save(username=user)
-
-#                 return Response(serializer.data, status=status.HTTP_201_CREATED)
-                
-#             else:
-#                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-from datetime import datetime, timedelta
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
-from rest_framework_simplejwt.tokens import RefreshToken
-
 class RegisterView(APIView):
-
+    
     def get(self, request, format=None):
+        
         return render(request, 'register.html')
 
     def post(self, request, format=None):
@@ -146,9 +99,12 @@ class RegisterView(APIView):
         if type == 'patient':
             serializer = PatientSerializer(data=request.data)
             if serializer.is_valid():
-                user.save()
+                
                 user.is_active = False
+                user.save()
                 serializer.save(username=user)
+                send_verification_email(request, user)
+
 
                 # Generate JWT token
                 refresh = RefreshToken.for_user(user)
@@ -171,14 +127,16 @@ class RegisterView(APIView):
                     'token': token,
                 }
 
-                return Response(response_data, status=status.HTTP_201_CREATED)
+                return redirect('checkemail')
             else:
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         else:
             serializer = TherapistSerializer(data=request.data)
             if serializer.is_valid():
+                user.is_active = False
                 user.save()
                 serializer.save(username=user)
+                send_verification_email(request, user)
 
                 # Generate JWT token
                 refresh = RefreshToken.for_user(user)
@@ -201,88 +159,11 @@ class RegisterView(APIView):
                     'token': token,
                 }
 
-                return Response(response_data, status=status.HTTP_201_CREATED)
+                return redirect('checkemail')
             else:
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
-
-
 #LOGIN FOR PATIENT OR DOCTOR    
-# class LoginView(APIView):
-    
-#     def get(self, request, format=None):
-#         return render(request, 'login.html')
-
-#     def forget(self, request, format=None):
-#         serializer = LoginSerializer(data=request.data)
-#         print(serializer)
-#         if serializer.is_valid():
-#             uname = serializer.validated_data['username']
-            
-#             print(uname)
-#             pwd = serializer.validated_data['password']
-#             print(pwd)
-#             user_authenticate = auth.authenticate(username=uname, password=pwd)
-#             print(user_authenticate)
-#             if user_authenticate is not None:
-#                 user = User.objects.get(username=uname)                
-#                 try:
-#                     print(user)
-#                     data = Patient.objects.get(username=user)
-#                     print(data)
-#                     print('Patient has been Logged')
-#                     auth.login(request, user_authenticate)
-#                     return redirect('dash',user='P')
-                        
-#                 except Patient.DoesNotExist:
-#                     try:
-#                         data = Therapist.objects.get(username=user)
-#                         print('therapist has been Logged')
-#                         auth.login(request, user_authenticate)
-#                         return redirect('mycalendlyregister',user=user.id)
-#                     except Therapist.DoesNotExist:
-#                         return redirect('/')
-#             else:
-#                 print('Login Failed')
-#                 return render(request, 'login.html')
-#         else:
-#             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-#     def post(self, request, format=None):
-#         serializer = LoginSerializer(data=request.data)
-#         print(serializer)
-#         if serializer.is_valid():
-#             uname = serializer.validated_data['username']
-           
-#             print(uname)
-#             pwd = serializer.validated_data['password']
-#             print(pwd)
-#             user_authenticate = auth.authenticate(username=uname, password=pwd)
-#             print(user_authenticate)
-#             if user_authenticate is not None:
-#                 user = User.objects.get(username=uname)                
-#                 try:
-#                     print(user)
-#                     data = Patient.objects.get(username=user)
-#                     print(data)
-#                     print('Patient has been Logged')
-#                     auth.login(request, user_authenticate)
-#                     return redirect('dash',user='P')
-
-#                 except Patient.DoesNotExist:
-#                     try:
-#                         data = Therapist.objects.get(username=user)
-#                         print('therapist has been Logged')
-#                         auth.login(request, user_authenticate)
-#                         return redirect('mycalendlyregister',user=user.id)
-#                     except Therapist.DoesNotExist:
-#                         return redirect('/')
-#             else:
-#                 print('Login Failed')
-#                 return render(request, 'login.html')
-#         else:
-#             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 class LoginView(APIView):
     
     def get(self, request, format=None):
@@ -290,16 +171,18 @@ class LoginView(APIView):
 
     def post(self, request, format=None):
         serializer = LoginSerializer(data=request.data)
+        print(serializer)
         if serializer.is_valid():
             uname = serializer.validated_data['username']
             pwd = serializer.validated_data['password']
             user_authenticate = auth.authenticate(username=uname, password=pwd)
-            
             if user_authenticate is not None:
                 user = User.objects.get(username=uname)                
                 try:
                     data = Patient.objects.get(username=user)
                     auth.login(request, user_authenticate)
+
+
                     # Generate JWT token
                     refresh = RefreshToken.for_user(user_authenticate)
                     token = str(refresh.access_token)
@@ -317,13 +200,14 @@ class LoginView(APIView):
                         }
                     }
                     
-                    return Response(response_data, status=status.HTTP_200_OK)
-                        
+                    return redirect('dash',user='P')
+
                 except Patient.DoesNotExist:
                     try:
                         data = Therapist.objects.get(username=user)
+                        print('therapist has been Logged')
                         auth.login(request, user_authenticate)
-                        # Generate JWT token
+                          # Generate JWT token
                         refresh = RefreshToken.for_user(user_authenticate)
                         token = str(refresh.access_token)
                         
@@ -340,8 +224,7 @@ class LoginView(APIView):
                             }
                         }
                         
-                        return Response(response_data, status=status.HTTP_200_OK)
-                        
+                        return redirect('mycalendlyregister',user=user.id)
                     except Therapist.DoesNotExist:
                         response_data = {
                             "$id": "1",
@@ -352,12 +235,12 @@ class LoginView(APIView):
                         return Response(response_data, status=status.HTTP_401_UNAUTHORIZED)
             else:
                 response_data = {
-                    "$id": "1",
-                    "code": 1,
-                    "message": "invalid username or password",
-                    "data": None
-                }
-                return Response(response_data, status=status.HTTP_401_UNAUTHORIZED)
+                            "$id": "1",
+                            "code": 1,
+                            "message": "invalid username or password",
+                            "data": None
+                        }
+                return HttpResponse("")     
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -487,3 +370,9 @@ def changepass(request,user):
 def hash_number(number):
     hashed_number = hashlib.sha256(str(number).encode()).hexdigest()
     return hashed_number
+
+
+
+#remind the user to check his email and verify before login
+def checkemail(request):
+    return render(request,'checkemail.html')
