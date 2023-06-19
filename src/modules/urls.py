@@ -18,5 +18,8 @@ urlpatterns = [
     path('forget/',views.forget,name="forget"),
     path('changepass/(?P<user>\d+)/$', views.changepass, name='changepass'),
     path('codeVerif/(?P<user>\d+)/<hashed_number>', views.codeVerif, name='codeVerif'),
+    path('profilep/',views.profilep,name="profilep"),
+    path('profiled/',views.profiled,name="profiled"),
+
 
 ]

@@ -17,11 +17,14 @@
 <p>name:{{data.name}}
     <br>
     email={{data.email}}
+
 </p>
+<a href="{% url 'profilep'  %}">profile</a>
 <form method="POST" action="">
     {% csrf_token %}
 <label for="doctor">Select doctor:</label>
     <select id="doctor" name="doctor" required>
+   
 {% for dr in doctors %}
         <option value={{dr}}>{{dr}}</option> 
 {% endfor %}

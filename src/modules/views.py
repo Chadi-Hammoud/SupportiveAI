@@ -48,30 +48,22 @@ def home(request):
 
 #INTEGRATION WITH MY CALENDLTY
 
+  #get the doctor from the fct dash and get his calendly link
 def mycalendly(request,user):
-    print("enter mycal")
-    print(user)
     data = Therapist.objects.get(username=user)
-    print(data)
-    print(data.Therapist_link)
     return render(request, 'mycallendly.html', {"Therapist_link":data.Therapist_link})
 
-
-
+  #get the loged in user (if doctor) get his data from db 
 def mycalendlyregister(request,user):
-    user_id = int(user)
-    print(user_id)
-    
+    user_id = int(user)    
     data = Therapist.objects.get(username=user_id)
     print(data.name)
-   
+
+   #let the doctor enter his calendly event link and save it in the db
     if request.method == "POST":
         link = request.POST['Therapist_link']
-        print(link)
-        print()
         data.Therapist_link=link
         data.save()
-        print(data.Therapist_link)
     
     return render(request, 'mycalendlyregister.html', {"user": user})
 
@@ -79,27 +71,28 @@ def mycalendlyregister(request,user):
 
 #register user in database
 class RegisterView(APIView):
-    
+    #get the register.html page
     def get(self, request, format=None):
-        
         return render(request, 'register.html')
 
+    #get user info entered in register.html 
     def post(self, request, format=None):
         type = request.data.get('post')
         username = request.data.get('username')
         password = request.data.get('password')
         email = request.data.get('email')
 
+        #make sure that the user doesnt already exists
         try:
             user = User.objects.get(username=username)
             return Response({'error': 'Username already exists.'}, status=status.HTTP_400_BAD_REQUEST)
         except User.DoesNotExist:
             user = User.objects.create_user(username=username, email=email, password=password)
-
+        
+        #if the type is patient , call patientSerializer to retreive data and save
         if type == 'patient':
             serializer = PatientSerializer(data=request.data)
             if serializer.is_valid():
-                
                 user.is_active = False
                 user.save()
                 serializer.save(username=user)
@@ -130,6 +123,7 @@ class RegisterView(APIView):
                 return redirect('checkemail')
             else:
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        #if the type is patient , call TherapistSerializer to retreive data and save
         else:
             serializer = TherapistSerializer(data=request.data)
             if serializer.is_valid():
@@ -159,7 +153,7 @@ class RegisterView(APIView):
                     'token': token,
                 }
 
-                return redirect('checkemail')
+                return Response(response_data, status=status.HTTP_201_CREATED)
             else:
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -240,7 +234,7 @@ class LoginView(APIView):
                             "message": "invalid username or password",
                             "data": None
                         }
-                return HttpResponse("")     
+                return  Response(response_data, status=status.HTTP_401_UNAUTHORIZED)   
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -248,29 +242,24 @@ class LoginView(APIView):
 #DASHBOARD 
 
 def dash(request, user):
-   
+
+   #get all doctors (patient choose one of these doctor to sched appointment)
     doctors=Therapist.objects.all()
     print(user)
+
+    #see if the user is a patient and get the patient data from db
     if(user=='P'):
        userid = User.objects.get(username=request.user)
        data = Patient.objects.get(username=userid)
-       print(data.name)
 
-    else:
-        userid = User.objects.get(username=request.user)
-        data = Therapist.objects.get(username=userid)
-        print(data.name)
-
+    #get the selected doctor and enter the calendly link of this doctor
     if request.method=='POST':
-       
         doctor=request.POST['doctor']
         user1 = User.objects.get(username=doctor)
-        print(user1.id)
         dctr=Therapist.objects.get(username=user1.id)
-        print(dctr.Therapist_link)
-        print(dctr.id)
         return redirect('mycalendly',user=user1.id)
     return render(request, 'dash.html', {'user': user, 'data': data,'doctors':doctors})
+
 
 #EMAIL VERIFICATION
 
@@ -314,7 +303,6 @@ def verify_email(request, uidb64, token):
 def send_reset_pass(request, user,number):
     print("send reset pass")
     mail_subject = "Reset Your Password"
-    #message = get_reset_link(request,user,password)
     message = str(number)  
     send_to=[user.email]
     email=EmailMessage(mail_subject, message, 'farahhtout15@example.com', send_to)
@@ -332,11 +320,10 @@ def forget(request):
             hashed_number = hash_number(number)
             send_reset_pass(request, user, number)
             return redirect('codeVerif',user,hashed_number)
-            
         except User.DoesNotExist:
-            # Handle the case where the user with the provided email doesn't exist
             return HttpResponse('User does not exist.')
     return render(request,'forget.html')
+
 
 def codeVerif(request,user,hashed_number):
     user = User.objects.get(username=user)
@@ -362,7 +349,6 @@ def changepass(request,user):
         user.set_password(password)
         user.save()
         return HttpResponse("your pass is changed")
-
     return render(request,'changepass.html')
 
 
@@ -376,3 +362,51 @@ def hash_number(number):
 #remind the user to check his email and verify before login
 def checkemail(request):
     return render(request,'checkemail.html')
+
+
+#Update Profile for patient and doctor
+
+  #update for patient
+def profilep(request):
+    user = User.objects.get(username=request.user)
+    patient = Patient.objects.get(username=user)
+    if request.method=='POST':
+        user.username=request.POST['username']
+        patient.name=request.POST['name']
+        patient.phone=request.POST['phone']
+        patient.address=request.POST['address']
+        patient.email=request.POST['email']
+        patient.dob=request.POST['dob']
+        patient.gender=request.POST['gender']
+        user.save()
+        patient.username=user
+        patient.save()
+        
+        return HttpResponse('your porfile is updated')
+    return render(request,'profilep.html', {'patient':patient,'user':user})
+
+
+def profiled(request):
+    user = User.objects.get(username=request.user)
+    doctor = Therapist.objects.get(username=user)
+    print('my dr'+doctor.name)
+    if request.method=='POST':
+        user.username=request.POST['username']
+        doctor.name=request.POST['name']
+        doctor.phone=request.POST['phone']
+        doctor.address=request.POST['address']
+        doctor.email=request.POST['email']
+        doctor.dob=request.POST['dob']
+        doctor.gender=request.POST['gender']
+        user.save()
+        doctor.username=user
+        doctor.save()
+        
+        return HttpResponse('your porfile is updated')
+    return render(request,'profiled.html', {'doctor':doctor,'user':user})
+    
+
+
+
+
+

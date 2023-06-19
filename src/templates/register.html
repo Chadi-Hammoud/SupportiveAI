@@ -122,7 +122,8 @@ border-color: #920592;
         <option value="F">Female</option>
     </select><br><br>
 
-    <input type="date" id="dob" name="dob" placeholder="date od birth"><br><br>
+    <input type="date" id="dob" name="dob" placeholder="date od birth" value="2001-01-01" onchange="validateDOB()"><br><br>
+
 
     <button type="submit">Register</button><br><br>
     <div class="container signin">
@@ -133,6 +134,19 @@ border-color: #920592;
 </div>
 
 </div>
+<script>
+  function validateDOB() {
+    var dobInput = document.getElementById("dob");
+    var selectedDate = new Date(dobInput.value);
+    var selectedYear = selectedDate.getFullYear();
+
+    if (selectedYear >= 2018) {
+      alert("Year of birth must be before 2018.");
+      dobInput.value = "";
+    }
+  }
+</script>
+
 
 </body>
 </html>
