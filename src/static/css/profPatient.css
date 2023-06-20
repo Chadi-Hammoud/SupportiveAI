@@ -1,0 +1,118 @@
+* {
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f1f1f1;
+    margin: 0;
+    padding: 20px;
+  }
+  
+  .container {
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  h1 {
+    text-align: center;
+    color: #562e81;
+    margin-bottom: 30px;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+  
+  .form-group {
+    margin-bottom: 20px;
+  }
+  
+  label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 10px;
+    color: #562e81;
+  }
+  
+  input,
+  select {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+    transition: border-color 0.3s ease;
+  }
+  
+  input:focus,
+  select:focus {
+    border-color: #562e81;
+    background-color: #f5f0fa;
+    color:#503869;
+   
+  }
+  
+  .form-actions {
+    text-align: center;
+    margin-top: 20px; /* Added margin-top for space */
+  }
+  
+  input[type="submit"] {
+    background-color: #562e81;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    padding: 12px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+  }
+  
+  input[type="submit"]:hover{
+    background-color: #b79ade;
+    color:#300963;
+    font-weight: bold;
+  }
+  a:hover {
+    color:#b79ade;
+  }
+  p {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 14px;
+  }
+  
+  a {
+    color: #300963;
+    text-decoration: none;
+    font-weight: bold;
+  }
+  
+  a:hover {
+    text-decoration: underline;
+  }
+  
+  /* Responsive Styles */
+  @media (max-width: 768px) {
+    .container {
+      padding: 20px;
+    }
+  
+    input,
+    select {
+      padding: 10px;
+      font-size: 14px;
+    }
+  
+    input[type="submit"] {
+      padding: 10px 16px;
+      font-size: 14px;
+    }
+  }
+  .buttonUp {
+    margin-top: 18px;
+  }
