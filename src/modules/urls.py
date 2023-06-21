@@ -10,7 +10,8 @@ urlpatterns = [
     path('', views.home, name='home'),
     path('checkemail', views.checkemail, name='checkemail'),
     path('mycalendly/(?P<user>\d+)/$', views.mycalendly, name='mycalendly'),
-    path('mycalendlyregister/(?P<user>\d+)/$', views.mycalendlyregister, name='mycalendlyregister'),
+    
+    path('drboard/(?P<user>\d+)/$', views.drboard, name='drboard'),
     path('login/', LoginView.as_view(), name='login'),
     path('register/', RegisterView.as_view(), name='register'),
     path('dash/(?P<user>.*)/$', views.dash, name='dash'),

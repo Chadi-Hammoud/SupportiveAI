@@ -53,19 +53,13 @@ def mycalendly(request,user):
     data = Therapist.objects.get(username=user)
     return render(request, 'mycallendly.html', {"Therapist_link":data.Therapist_link})
 
-  #get the loged in user (if doctor) get his data from db 
-def mycalendlyregister(request,user):
+
+#dashboard for doctor
+def drboard(request,user):
     user_id = int(user)    
     data = Therapist.objects.get(username=user_id)
-    print(data.name)
+    return render(request, 'drboard.html', {"user": user, 'data':data})
 
-   #let the doctor enter his calendly event link and save it in the db
-    if request.method == "POST":
-        link = request.POST['Therapist_link']
-        data.Therapist_link=link
-        data.save()
-    
-    return render(request, 'mycalendlyregister.html', {"user": user})
 
 
 
@@ -150,10 +144,11 @@ class RegisterView(APIView):
                     'dob': serializer.validated_data.get('dob'),
                     'gender': serializer.validated_data.get('gender'),
                     'post': 'therapist',
+                    'Therapist_link':serializer.validated_data.get('Therapist_link'),
                     'token': token,
                 }
 
-                return Response(response_data, status=status.HTTP_201_CREATED)
+                return redirect('checkemail')
             else:
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -218,7 +213,7 @@ class LoginView(APIView):
                             }
                         }
                         
-                        return redirect('mycalendlyregister',user=user.id)
+                        return redirect('drboard',user=user.id)
                     except Therapist.DoesNotExist:
                         response_data = {
                             "$id": "1",
@@ -398,6 +393,7 @@ def profiled(request):
         doctor.email=request.POST['email']
         doctor.dob=request.POST['dob']
         doctor.gender=request.POST['gender']
+        doctor.Therapist_link=request.POST['link']
         user.save()
         doctor.username=user
         doctor.save()

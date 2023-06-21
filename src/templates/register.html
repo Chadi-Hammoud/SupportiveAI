@@ -44,7 +44,6 @@ border-color: #920592;
 border-width: 2px;
 }
 
-
 button{
 margin-right:55px;
 float:right;
@@ -62,6 +61,7 @@ border-color: #920592;
   
 
 }
+
 
 
 .form{
@@ -87,7 +87,14 @@ border-color: #920592;
     background-color: #f1f1f1;
     text-align: center;
   }
-  
+  .hidden {
+ display: none;
+ color:#942d94;
+ font-weight: bolder;
+font-size:18px;
+font-family:Garamond; 
+
+}
   </style>
 </head>
 <body>
@@ -112,18 +119,22 @@ border-color: #920592;
     <input class="input-field" type="text" id="address" name="address" placeholder="address"  required><br><br>
    
     
-    <select id="post" name="post" required>
-        <option value="doctor">Doctor</option>
+    <select id="post" name="post"  onchange="setlink()" required>
+      
         <option value="patient">Patient</option>
+        <option value="doctor">Doctor</option>
     </select><br><br>
-
+  
     <select id="gender" name="gender" placeholder="gender" required>
         <option value="M">Male</option>
         <option value="F">Female</option>
     </select><br><br>
 
     <input type="date" id="dob" name="dob" placeholder="date od birth" value="2001-01-01" onchange="validateDOB()"><br><br>
-
+    <div class="hidden">
+      Please register on <a href="https://calendly.com/" target="_blank">Calendly</a>, create an event, and put the link below.  
+        <input class="input-field" type="text" id="link" name ="Therapist_link" placeholder="clendly link"  ><br><br>
+    </div>
 
     <button type="submit">Register</button><br><br>
     <div class="container signin">
@@ -145,6 +156,16 @@ border-color: #920592;
       dobInput.value = "";
     }
   }
+  function setlink() {
+  var selectedOption = document.getElementById('post').value;
+  var hiddenBlock = document.querySelector('.hidden');
+  
+  if (selectedOption === 'doctor') {
+    hiddenBlock.style.display = 'block';
+  } else {
+    hiddenBlock.style.display = 'none';
+  }
+}
 </script>
 
 

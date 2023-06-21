@@ -1,0 +1,19 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+
+<P>you can see here your clanedly </P><a href="{% url 'mycalendly' user %}">{{ data }} Calnendly</a><BR>
+your profile:<a href="{% url 'profiled'  %}">{{data.name}}</a>
+<figure>
+<figcaption>you can see your appointments by scanning this code</figcaption>
+<img src="{% static 'images/qrcode.png' %}" alt="app" style="height: 300px;"/>
+</figure>
+<P>or you can see your appointments using this link: <a href="https://calendly.com/app/scheduled_events/user/me">appointments</a></P>
+</body>
+</html>

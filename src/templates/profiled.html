@@ -33,11 +33,13 @@
         <input type="email" id="email" name="email" value="{{ doctor.email }}" required>
         </div>
         <div>
-        <label for="gender">Gender:</label>
-        <select id="gender" name="gender" required>
-          <option value="M" {% if patient.gender == 'M' %}selected{% endif %}>Male</option>
-          <option value="F" {% if patient.gender == 'F' %}selected{% endif %}>Female</option>
-        </select><br><br>
+          
+          <label for="gender">Gender:</label>
+          {% if doctor.gender == 'F' %}
+          <input type="text" id="gender" name="gender" value='female' required>
+          {% else %}
+          <input type="text" id="gender" name="gender" value='Male' required>
+          {% endif %}
     
         </div>
         <div>
@@ -45,6 +47,10 @@
         <label for="dob">Date of Birth:</label>
         <input type="text" id="dob" name="dob" value="{{ doctor.dob }}" required>
         </div>
+        <div>
+          <label for="link">Calnendly link:</label>
+          <input type="link" id="link" name="link" value="{{ doctor.Therapist_link }}" required>
+          </div>
         <p><a href="/forget/">Change your password</a></p>
         <div style="text-align: center; margin-top: 20px;">
             <input type="submit" value="Update">

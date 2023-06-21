@@ -19,7 +19,7 @@
     email={{data.email}}
 
 </p>
-<a href="{% url 'profilep'  %}">profile</a>
+<a href="{% url 'profilep'  %}">{{data.name }}profile</a>
 <form method="POST" action="">
     {% csrf_token %}
 <label for="doctor">Select doctor:</label>
