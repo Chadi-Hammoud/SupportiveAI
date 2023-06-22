@@ -46,11 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'modules',
     'rest_framework',
-    "verify_email.apps.VerifyEmailConfig",
-   
-
-
-    
+    "verify_email.apps.VerifyEmailConfig", 
 ]
 
 MIDDLEWARE = [
@@ -61,7 +57,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-     'corsheaders.middleware.CorsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'Project.urls'
@@ -154,3 +150,10 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:8080",
     "http://127.0.0.1:8080"
 ]
+
+# Rest FrameWork
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES':[
+        'rest_framework.authentication.TokenAuthentication',
+    ]
+}

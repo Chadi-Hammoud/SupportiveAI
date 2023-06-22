@@ -99,12 +99,10 @@ class RegisterView(APIView):
         if type == 'patient':
             serializer = PatientSerializer(data=request.data)
             if serializer.is_valid():
-                
                 user.is_active = False
                 user.save()
                 serializer.save(username=user)
                 send_verification_email(request, user)
-
 
                 # Generate JWT token
                 refresh = RefreshToken.for_user(user)
@@ -164,8 +162,17 @@ class RegisterView(APIView):
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 #LOGIN FOR PATIENT OR DOCTOR    
+from django.shortcuts import render, redirect
+from django.contrib import auth
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework_simplejwt.tokens import RefreshToken
+from .serializers import LoginSerializer
+from .models import Patient, Therapist
+
 class LoginView(APIView):
-    
+
     def get(self, request, format=None):
         return render(request, 'login.html')
 
@@ -177,72 +184,61 @@ class LoginView(APIView):
             pwd = serializer.validated_data['password']
             user_authenticate = auth.authenticate(username=uname, password=pwd)
             if user_authenticate is not None:
-                user = User.objects.get(username=uname)                
+                user = User.objects.get(username=uname)
                 try:
                     data = Patient.objects.get(username=user)
                     auth.login(request, user_authenticate)
 
-
                     # Generate JWT token
                     refresh = RefreshToken.for_user(user_authenticate)
                     token = str(refresh.access_token)
-                    
+
                     response_data = {
-                        "$id": "1",
-                        "code": 0,
                         "message": "success",
                         "data": {
-                            "$id": "2",
                             "Id": data.id,
                             "Name": data.name,
                             "Email": data.email,
                             "Token": token
                         }
                     }
-                    
-                    return redirect('dash',user='P')
+
+                    return redirect('dash', user='P')
 
                 except Patient.DoesNotExist:
                     try:
                         data = Therapist.objects.get(username=user)
                         print('therapist has been Logged')
                         auth.login(request, user_authenticate)
-                          # Generate JWT token
+                        # Generate JWT token
                         refresh = RefreshToken.for_user(user_authenticate)
                         token = str(refresh.access_token)
-                        
+
                         response_data = {
-                            "$id": "1",
-                            "code": 0,
                             "message": "success",
                             "data": {
-                                "$id": "2",
                                 "Id": data.id,
                                 "Name": data.name,
                                 "Email": data.email,
                                 "Token": token
                             }
                         }
-                        
-                        return redirect('mycalendlyregister',user=user.id)
+                        return redirect('mycalendlyregister', user=user.id)
                     except Therapist.DoesNotExist:
                         response_data = {
-                            "$id": "1",
-                            "code": 1,
                             "message": "invalid username or password",
                             "data": None
                         }
                         return Response(response_data, status=status.HTTP_401_UNAUTHORIZED)
             else:
                 response_data = {
-                            "$id": "1",
-                            "code": 1,
-                            "message": "invalid username or password",
-                            "data": None
-                        }
-                return HttpResponse("")     
+                    "message": "invalid username or password",
+                    "data": None
+                }
+                return Response(response_data ,status=status.HTTP_401_UNAUTHORIZED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 
 #DASHBOARD 
