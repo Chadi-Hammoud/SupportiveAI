@@ -4,6 +4,14 @@ from django.contrib.auth.tokens import default_token_generator
 import random
 import hashlib
 import io
+from django.shortcuts import render, redirect
+from django.contrib import auth
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework_simplejwt.tokens import RefreshToken
+from .serializers import LoginSerializer
+from .models import Patient, Therapist
 from datetime import datetime, timedelta
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -216,20 +224,16 @@ class LoginView(APIView):
                         return redirect('drboard',user=user.id)
                     except Therapist.DoesNotExist:
                         response_data = {
-                            "$id": "1",
-                            "code": 1,
                             "message": "invalid username or password",
                             "data": None
                         }
                         return Response(response_data, status=status.HTTP_401_UNAUTHORIZED)
             else:
                 response_data = {
-                            "$id": "1",
-                            "code": 1,
-                            "message": "invalid username or password",
-                            "data": None
-                        }
-                return  Response(response_data, status=status.HTTP_401_UNAUTHORIZED)   
+                 "message": "invalid username or password",
+                    "data": None
+                }
+                return Response(response_data ,status=status.HTTP_401_UNAUTHORIZED)   
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
