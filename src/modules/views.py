@@ -125,7 +125,9 @@ class RegisterView(APIView):
                     'token': token,
                 }
 
-                return redirect('checkemail')
+                # return redirect('checkemail')
+                return Response(response_data, status=status.HTTP_401_UNAUTHORIZED)
+
             else:
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         else:
@@ -157,7 +159,9 @@ class RegisterView(APIView):
                     'token': token,
                 }
 
-                return redirect('checkemail')
+                # return redirect('checkemail')
+                return Response(response_data, status=status.HTTP_401_UNAUTHORIZED)
+
             else:
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -203,7 +207,8 @@ class LoginView(APIView):
                         }
                     }
 
-                    return redirect('dash', user='P')
+                    # return redirect('dash', user='P')
+                    return Response(response_data, status=status.HTTP_401_UNAUTHORIZED)
 
                 except Patient.DoesNotExist:
                     try:
@@ -223,7 +228,9 @@ class LoginView(APIView):
                                 "Token": token
                             }
                         }
-                        return redirect('mycalendlyregister', user=user.id)
+                        # return redirect('mycalendlyregister', user=user.id)
+                        return Response(response_data, status=status.HTTP_401_UNAUTHORIZED)
+
                     except Therapist.DoesNotExist:
                         response_data = {
                             "message": "invalid username or password",
