@@ -3,7 +3,9 @@
 
 from django.urls import path
 from . import views
+from . import api
 from modules.views import *
+from modules.api import *
 
 
 urlpatterns = [
@@ -18,5 +20,8 @@ urlpatterns = [
     path('forget/',views.forget,name="forget"),
     path('changepass/(?P<user>\d+)/$', views.changepass, name='changepass'),
     path('codeVerif/(?P<user>\d+)/<hashed_number>', views.codeVerif, name='codeVerif'),
+    path('login-api/', LoginViewApi.as_view(), name='login-api'),
+    # path('forget-api/',api.forgetApi,name="forget"),
+    path('register-api/', RegisterViewApi.as_view(), name='register-api'),
 
 ]
