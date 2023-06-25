@@ -9,5 +9,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('modules.urls')),
     path('verification/', include('verify_email.urls')),
+    path("", include("openai.urls")),
 
 ]  + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

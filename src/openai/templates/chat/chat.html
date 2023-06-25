@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Chat App</title>
+</head>
+
+<body>
+    <h1>Chat</h1>
+    <div id="message-container">
+        <ul>
+            {% for message in messages %}
+            {% if message.sender == request.user %}
+            <p><strong>User:</strong> {{ message.content }}</p>
+        {% else %}
+            <p><strong>Chatbot:</strong> {{ message.chat_res }}</p>
+        {% endif %}
+            <!-- <li>{{ message.sender }}: {{ message.content }}</li> -->
+            {% endfor %}
+        </ul>
+    </div>
+    <form method="POST" action="">
+        {% csrf_token %}
+        <input type="text" name="sender" placeholder="Your name" required><br>
+        <textarea name="content" placeholder="Type your message" required></textarea><br>
+        <input type="submit" value="Send">
+    </form>
+</body>
+
+</html>
