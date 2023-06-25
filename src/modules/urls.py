@@ -13,6 +13,7 @@ urlpatterns = [
     path('mycalendly/(?P<user>\d+)/$', views.mycalendly, name='mycalendly'),
     path('drboard/(?P<user>\d+)/$', views.drboard, name='drboard'),
     path('login/', LoginView.as_view(), name='login'),
+    path('logout/',views.logout_view,name="logout"),
     path('register/', RegisterView.as_view(), name='register'),
     path('dash/(?P<user>.*)/$', views.dash, name='dash'),
     path('verify/<uidb64>/<token>/', views.verify_email, name='verify_email'),
@@ -24,6 +25,7 @@ urlpatterns = [
     path('login-api/', LoginViewApi.as_view(), name='login-api'),
     # path('forget-api/',api.forgetApi,name="forget"),
     path('register-api/', RegisterViewApi.as_view(), name='register-api'),
+    path('searchdr/',views.searchdr,name="searchdr"),
 
 
 ]

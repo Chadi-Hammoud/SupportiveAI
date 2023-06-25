@@ -45,7 +45,8 @@
         <div>
 
         <label for="dob">Date of Birth:</label>
-        <input type="text" id="dob" name="dob" value="{{ doctor.dob }}" required>
+      
+        <input type="text" id="dob" name="dob" value="{{ doctor.dob|date:'Y-m-d' }}" required>
         </div>
         <div>
           <label for="link">Calnendly link:</label>

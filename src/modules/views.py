@@ -3,6 +3,7 @@ from django.contrib import auth
 from django.contrib.auth.tokens import default_token_generator
 import random
 import hashlib
+from django.contrib.auth import logout
 import io
 from django.shortcuts import render, redirect
 from django.contrib import auth
@@ -34,6 +35,7 @@ from rest_framework.views import APIView
 from rest_framework import status
 from .serializers import PatientSerializer,LoginSerializer,TherapistSerializer
 from .models import *
+from django.contrib.auth.models import AnonymousUser
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
@@ -51,7 +53,22 @@ from django.template.loader import render_to_string
 # Create your views here.
 
 def home(request):
-    return render(request, 'home.html', {"user": None})
+    print(request.user)
+    user=request.user
+    user = request.user
+    if isinstance(user, AnonymousUser) or not user.is_authenticated:
+        return render(request, 'home.html', {"user": None})
+    else:
+        try:
+            data = Patient.objects.get(username=user)
+            return redirect('dash',user='P')
+        except Patient.DoesNotExist:
+                    try:
+                        data = Therapist.objects.get(username=user)
+                        return redirect('drboard',user=user.id)
+                    except Therapist.DoesNotExist:
+                        return redirect('/')
+
 
 
 #INTEGRATION WITH MY CALENDLTY
@@ -265,7 +282,7 @@ def dash(request, user):
 #send email verification for patient
 
 def send_verification_email(request, user):
-    mail_subject = 'Verify your email'
+    mail_subject = 'this is farah , plz Verify your email. -- python code--'
     message = get_verification_link(request, user)
     print(message)
     send_to=[user.email]
@@ -291,6 +308,7 @@ def verify_email(request, uidb64, token):
     if user is not None and default_token_generator.check_token(user, token):
         user.is_active = True
         user.save()
+
         return HttpResponse('verification_success, you can exit here end login to site')
     else:
         return HttpResponse('verification_failure')
@@ -368,7 +386,7 @@ def checkemail(request):
   #update for patient
 def profilep(request):
     user = User.objects.get(username=request.user)
-    patient = Patient.objects.get(username=user)
+    patient = Patient.objects.get(username=user) 
     if request.method=='POST':
         user.username=request.POST['username']
         patient.name=request.POST['name']
@@ -406,7 +424,28 @@ def profiled(request):
     return render(request,'profiled.html', {'doctor':doctor,'user':user})
     
 
+def searchdr(request):
+    doctors=Therapist.objects.all()
+    user = User.objects.get(username=request.user)
+    return render(request, 'searchdr.html',{'doctors':doctors,'user':user.id})
+
+from django.contrib.auth import logout as auth_logout
+
+def logout_view(request):
+    auth_logout(request)
+    return redirect('/')
 
 
+
+from datetime import datetime
+
+def format_date(date_string):
+    # Convert the date string to a datetime object
+    date_obj = datetime.strptime(date_string, '%b. %d, %Y')
+
+    # Format the datetime object as "yyyy-mm-dd"
+    formatted_date = date_obj.strftime('%Y-%m-%d')
+
+    return formatted_date
 
 

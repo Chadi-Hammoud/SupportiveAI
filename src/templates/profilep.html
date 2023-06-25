@@ -51,7 +51,7 @@
 
             <div>
                 <label for="dob">Date of Birth:</label>
-                <input type="text" id="dob" name="dob" value="{{ patient.dob }}" required>
+                <input type="text" id="dob" name="dob" value="{{ patient.dob|date:'Y-m-d' }}"required>
             </div>
             <p><a href="/forget/">Change your password</a></p>
             <div class="buttonUp">
