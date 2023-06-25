@@ -58,6 +58,9 @@ def home(request):
     user = request.user
     if isinstance(user, AnonymousUser) or not user.is_authenticated:
         return render(request, 'home.html', {"user": None})
+    elif user.is_superuser :
+        return render(request, 'home.html', {"user": None})
+
     else:
         try:
             data = Patient.objects.get(username=user)
