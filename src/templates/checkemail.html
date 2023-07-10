@@ -1,12 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Title</title>
     <title>Title</title>
     <style>
-        body {
+       body {
             background-color: #f3f3f3;
             color: #333333;
             font-family: Arial, sans-serif;
@@ -47,12 +46,12 @@
 
         h2 {
             margin-top: 0;
-            margin-bottom: 30px;
+            margin-bottom: 10px;
             font-size: 24px;
             color: #3f166a;
         }
 
-        input[type="email"] {
+        input[type="text"] {
             border-radius: 25px;
             background: #f7f7f7;
             width: 100%;
@@ -67,7 +66,7 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
-        button {
+        a {
             border-radius: 25px;
             background: linear-gradient(to right, #6a4dec, #9c5df5);
             width: 100%;
@@ -80,6 +79,10 @@
             cursor: pointer;
             transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            padding-top:4%;
+            text-decoration: none;
+
         }
 
         button:hover {
@@ -96,13 +99,9 @@
             }
 
             h2 {
-                font-size: 20px;
+                font-size: 10px;
             }
 
-            input[type="email"],
-            button {
-                width: 90%;
-            }
         }
 
         @media only screen and (max-width: 480px) {
@@ -115,33 +114,24 @@
             }
 
             h2 {
-                font-size: 18px;
+                font-size: 10px;
             }
 
-            input[type="email"],
-            button {
+            a {
                 height: 35px;
                 font-size: 14px;
             }
         }
-    </style>
+</style>
 </head>
-
 <body>
-    <div class="container">
-        <div class="center">
-            <form method="POST" action="">
-                {% csrf_token %}
-                <h2>Enter your email to receive the code</h2>
-                <div>
-                    <input type="email" name="email" placeholder="Enter your email" required>
-                </div>
-                <div>
-                    <button type="submit">Submit</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</body>
+    <div class="center">
+    <h2>Check your email. Click on the link to verify your account</h2><br> 
+    <h2>If your account is verified, continue and login</h2><br>
+    <a href="{% url 'login' %}">continue</a>
+  
 
+
+</div>
+</body>
 </html>

@@ -13,7 +13,7 @@ class TherapistSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Therapist
-        fields = ('id','name','phone','address','email','dob','gender','post')
+        fields = ('id','name','phone','address','email','dob','gender','post','Therapist_link')
 
 
 class LoginSerializer(serializers.Serializer):
